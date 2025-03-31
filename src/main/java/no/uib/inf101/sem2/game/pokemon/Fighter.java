@@ -1,8 +1,5 @@
 package no.uib.inf101.sem2.game.pokemon;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class Fighter implements IFighter {
 
     private int hp;
