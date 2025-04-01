@@ -21,7 +21,6 @@ public class Pokemon {
     }
 
     public static Pokemon randomPokemon(String type) {
-
         ArrayList<String> pokemonTypes = new ArrayList<>(Arrays.asList("Water", "Rock", "Grass", "Fire", "Bug"));
         int random = randomNumber(2);
         if (pokemonTypes.contains(type)) {
@@ -53,14 +52,6 @@ public class Pokemon {
 
     public static int randomNumber(int maxNumber) {
         return (int) (Math.random() * (maxNumber - 1));
-    }
-
-    private String getName() {
-        return this.name;
-    }
-
-    private String getType() {
-        return this.type;
     }
 
 }

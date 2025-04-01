@@ -8,7 +8,7 @@ public interface IFighter {
 
     public int getMaxHP();
 
-    public String getAttack();
+    public int getAttack();
 
     public int takeDamage(int damage);
 
