@@ -7,11 +7,16 @@ public class Fighter implements IFighter {
     private int attack;
     private int currentHp;
 
-    public Fighter() {
+    private Fighter() {
         this.hp = hp;
         this.type = type;
         this.attack = attack;
         this.currentHp = currentHp;
+    }
+
+    private static Pokemon randomFighter() {
+        Pokemon fighter = Pokemon.randomPokemon("Fire");
+        return fighter;
     }
 
     @Override

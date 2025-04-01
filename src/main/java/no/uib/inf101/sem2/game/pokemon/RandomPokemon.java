@@ -1,6 +1,5 @@
 package no.uib.inf101.sem2.game.pokemon;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +8,14 @@ import java.util.Map;
 
 public class RandomPokemon {
 
-    public String genPokemon() {
+    /**
+     * Took inspiration from:
+     * Coderanch.com - 31.03
+     * https://coderanch.com/t/579785/java/Iterate-HashMap-type-HashMap-String
+     * 
+     * @return
+     */
+    public String randomPokemon() {
         ArrayList<String> rockPokemon = new ArrayList<>(Arrays.asList("Cubone", "Dugtrio"));
         ArrayList<String> bugPokemon = new ArrayList<>(Arrays.asList("Scyther", "Victreebell"));
         ArrayList<String> waterPokemon = new ArrayList<>(Arrays.asList("Magikarp"));
