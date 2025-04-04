@@ -4,6 +4,7 @@ public class Fighter extends AbstractFighter {
 
     String type;
     int maxHP;
+    int currentHP;
     String name;
     int attackDamage;
 
@@ -15,8 +16,30 @@ public class Fighter extends AbstractFighter {
 
     }
 
+    @Override
+    public int getHP() {
+        return currentHP;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public int getAttackDamage() {
+        return attackDamage;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
     private static Pokemon randomFighter() {
-        Pokemon fighter = Pokemon.randomPokemon("Fire");
+        Pokemon fighter = Pokemon.randomPokemon(PokemonTypes.FIRE);
         return fighter;
     }
 

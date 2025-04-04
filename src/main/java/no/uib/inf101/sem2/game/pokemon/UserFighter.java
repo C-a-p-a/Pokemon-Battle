@@ -15,4 +15,31 @@ public class UserFighter extends AbstractFighter {
         pokemon.takeDamage(attackDamage);
     }
 
+    @Override
+    public int getHP() {
+        return currentHP;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
+    }
+
+    public int getAttackDamage() {
+        return attackDamage;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public String getType() {
+        return this.type;
+    }
+
+    private static Pokemon randomFighter() {
+        Pokemon fighter = Pokemon.randomPokemon(PokemonTypes.FIRE);
+        return fighter;
+    }
+
 }

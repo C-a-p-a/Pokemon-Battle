@@ -2,17 +2,20 @@ package no.uib.inf101.sem2.game.pokemon;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class Pokemon {
 
     private int maxHP;
-    private String type;
+    private PokemonTypes type;
     private int attack;
     private int currentHp;
     private String name;
     private int random;
 
-    private Pokemon(String type, String name, int hp) {
+    public Pokemon(PokemonTypes type, String name, int hp) {
         this.type = type;
         this.name = name;
         this.maxHP = hp;
@@ -20,26 +23,26 @@ public class Pokemon {
         this.random = randomNumber(2);
     }
 
-    public static Pokemon randomPokemon(String type) {
-        ArrayList<String> pokemonTypes = new ArrayList<>(Arrays.asList("Water", "Rock", "Grass", "Fire", "Bug"));
+    public static Pokemon randomPokemon(PokemonTypes type) {
+        type = randomPokemonType();
         int random = randomNumber(2);
-        if (pokemonTypes.contains(type)) {
+        if (PokemonTypes.values) {
             switch (type) {
-                case "Water":
+                case WATER:
 
                     if (random == 1) {
-                        Pokemon blastoise = new Pokemon("Water", "Blastoise", 150);
+                        Pokemon blastoise = new Pokemon(PokemonTypes.WATER, "Blastoise", 150);
                         return blastoise;
                     }
 
                     else if (random == 2) {
-                        Pokemon magikarp = new Pokemon("Water", "Magikarp", 25);
+                        Pokemon magikarp = new Pokemon(PokemonTypes.WATER, "Magikarp", 25);
                         return magikarp;
                     }
 
-                case "Fire":
+                case FIRE:
                     if (random == 1) {
-                        Pokemon charizard = new Pokemon("Fire", "Charizard", 150);
+                        Pokemon charizard = new Pokemon(PokemonTypes.FIRE, "Charizard", 150);
                         return charizard;
                     }
 
@@ -47,6 +50,18 @@ public class Pokemon {
         } else
             throw new IllegalArgumentException("Invalid type! Try again " + type);
         return null;
+
+    }
+
+    /**
+     * Took inspiration from a Stack Overflow thread;
+     * https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum
+     * Timestamp - 4.4.2024 @ 12:40
+     * 
+     * @return
+     */
+    public static PokemonTypes randomPokemonType() {
+        return PokemonTypes.values()[new Random().nextInt(PokemonTypes.values().length)];
 
     }
 

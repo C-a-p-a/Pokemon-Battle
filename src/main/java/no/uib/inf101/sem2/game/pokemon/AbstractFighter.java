@@ -46,6 +46,8 @@ public abstract class AbstractFighter implements IFighter {
         return this.currentHP -= damage;
     }
 
-    public abstract void attack(Fighter pokemon);
+    public void attack(Fighter pokemon) {
+        pokemon.takeDamage(attackDamage);
+    }
 
 }
