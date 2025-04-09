@@ -16,4 +16,6 @@ public interface IFighter {
 
     public boolean isAlive();
 
+    public Attack chooseAttack(Battle battleContext);
+
 }

@@ -42,4 +42,10 @@ public class UserFighter extends AbstractFighter {
         return fighter;
     }
 
+    @Override
+    public Attack chooseAttack(Battle battleContext) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'chooseAttack'");
+    }
+
 }

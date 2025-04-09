@@ -1,68 +1,96 @@
 package no.uib.inf101.sem2.game.pokemon;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public class Pokemon {
 
-    private int maxHP;
-    private PokemonTypes type;
-    private int attack;
-    private int currentHp;
-    private String name;
-    private int random;
+    private PokemonTypes type1;
+    private PokemonTypes type2;
 
-    public Pokemon(PokemonTypes type, String name, int hp) {
-        this.type = type;
+    private int maxHP;
+    private int currentHp;
+
+    private int attackStat;
+    private int defenseStat;
+    private int cooldown;
+
+    private List<Attack> moves;
+    private String name;
+
+    public Pokemon(String name, PokemonTypes type1, int maxHP, int attackStat, int defenseStat, int cooldown,
+            List<Attack> moves) {
         this.name = name;
-        this.maxHP = hp;
-        this.currentHp = hp;
-        this.random = randomNumber(2);
+        this.type1 = type1;
+        this.maxHP = maxHP;
+        this.currentHp = maxHP;
+        this.attackStat = attackStat;
+        this.defenseStat = defenseStat;
+        this.cooldown = cooldown;
+        this.moves = moves;
     }
 
-    public static Pokemon randomPokemon(PokemonTypes type) {
-        type = randomPokemonType();
-        int random = randomNumber(2);
-        if (PokemonTypes.values) {
-            switch (type) {
-                case WATER:
+    public String getName() {
+        return this.name;
+    }
 
-                    if (random == 1) {
-                        Pokemon blastoise = new Pokemon(PokemonTypes.WATER, "Blastoise", 150);
-                        return blastoise;
-                    }
+    public PokemonTypes getType() {
+        return this.type1;
+    }
 
-                    else if (random == 2) {
-                        Pokemon magikarp = new Pokemon(PokemonTypes.WATER, "Magikarp", 25);
-                        return magikarp;
-                    }
+    public int getMaxHP() {
+        return this.maxHP;
+    }
 
-                case FIRE:
-                    if (random == 1) {
-                        Pokemon charizard = new Pokemon(PokemonTypes.FIRE, "Charizard", 150);
-                        return charizard;
-                    }
+    public int getAttackStat() {
+        return this.attackStat;
+    }
 
-            }
-        } else
-            throw new IllegalArgumentException("Invalid type! Try again " + type);
-        return null;
+    public int defenseStat() {
+        return this.defenseStat;
+    }
 
+    public int getCooldown() {
+        return this.cooldown;
+    }
+
+    public List<Attack> getMoves() {
+        return this.moves;
     }
 
     /**
      * Took inspiration from a Stack Overflow thread;
      * https://stackoverflow.com/questions/1972392/pick-a-random-value-from-an-enum
-     * Timestamp - 4.4.2024 @ 12:40
+     * Timestamp - 4.4.2025 @ 12:40
      * 
      * @return
      */
     public static PokemonTypes randomPokemonType() {
         return PokemonTypes.values()[new Random().nextInt(PokemonTypes.values().length)];
 
+    }
+
+    public void takeDamage(int damage) {
+        if (currentHp < damage) {
+            // pokemon dead
+        } else {
+            currentHp -= damage;
+        }
+    }
+
+    public boolean hasFainted() {
+        if (currentHp <= 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public void restoreHP() {
+        currentHp = maxHP;
     }
 
     public static int randomNumber(int maxNumber) {

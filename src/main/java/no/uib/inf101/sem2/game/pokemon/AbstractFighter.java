@@ -13,41 +13,18 @@ public abstract class AbstractFighter implements IFighter {
      * @param attack
      */
 
-    int maxHP;
-    String type;
-    int currentHP;
     String name;
-    int attackDamage;
+    protected Pokemon activePokemon;
 
-    public int getHP() {
-        return this.currentHP;
+    public AbstractFighter(Pokemon pokemon, String name) {
+        this.activePokemon = pokemon;
+        this.name = name;
     }
 
-    public String getType() {
-        return this.type;
+    public Pokemon getPokemon() {
+        return activePokemon;
     }
 
-    public int getMaxHP() {
-        return maxHP;
-    }
-
-    public int getAttack() {
-        return this.attackDamage;
-    }
-
-    public boolean isAlive() {
-        if (currentHP >= 0) {
-            return false;
-        }
-        return true;
-    }
-
-    public int takeDamage(int damage) {
-        return this.currentHP -= damage;
-    }
-
-    public void attack(Fighter pokemon) {
-        pokemon.takeDamage(attackDamage);
-    }
+    public abstract void chooseAttack();
 
 }
