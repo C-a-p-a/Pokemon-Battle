@@ -22,4 +22,5 @@ public class Attack {
     public PokemonTypes getAttackType() {
         return this.type;
     }
+
 }

@@ -46,6 +46,10 @@ public class Pokemon {
         return this.maxHP;
     }
 
+    public int getHP() {
+        return this.currentHp;
+    }
+
     public int getAttackStat() {
         return this.attackStat;
     }
@@ -76,7 +80,8 @@ public class Pokemon {
 
     public void takeDamage(int damage) {
         if (currentHp < damage) {
-            // pokemon dead
+            currentHp = currentHp - currentHp;
+            hasFainted();
         } else {
             currentHp -= damage;
         }

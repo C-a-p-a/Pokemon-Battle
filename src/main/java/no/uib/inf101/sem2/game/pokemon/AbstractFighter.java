@@ -7,24 +7,22 @@ public abstract class AbstractFighter implements IFighter {
      * https://www.w3schools.com/java/java_abstract.asp
      * 01.04.2025
      * 
-     * @param type
-     * @param maxHP
+     * @param pokemon
      * @param name
-     * @param attack
      */
 
-    String name;
-    protected Pokemon activePokemon;
+    private String name;
+    public Pokemon activePokemon;
 
-    public AbstractFighter(Pokemon pokemon, String name) {
+    public AbstractFighter(Pokemon pokemon, String pokeName) {
         this.activePokemon = pokemon;
-        this.name = name;
+        this.name = pokeName;
     }
 
     public Pokemon getPokemon() {
         return activePokemon;
     }
 
-    public abstract void chooseAttack();
+    public abstract Attack chooseAttack(Battle battleContext);
 
 }
