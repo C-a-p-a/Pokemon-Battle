@@ -86,7 +86,7 @@ public class UserFighter extends AbstractFighter {
                 choice = -1;
             }
         }
-        return choice;
+        return choice - 1;
     }
 
 }

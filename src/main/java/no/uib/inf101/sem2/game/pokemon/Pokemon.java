@@ -1,9 +1,5 @@
 package no.uib.inf101.sem2.game.pokemon;
 
-import java.util.Arrays;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
