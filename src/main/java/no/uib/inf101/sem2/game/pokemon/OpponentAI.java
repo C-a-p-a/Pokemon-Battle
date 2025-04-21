@@ -1,21 +1,17 @@
 package no.uib.inf101.sem2.game.pokemon;
 
 import java.util.List;
+import java.util.Random;
 
 public class OpponentAI extends AbstractFighter {
 
-    private Pokemon pokemon;
-    private String name;
-
     public OpponentAI(Pokemon pokemon, String name) {
         super(pokemon, name);
-        this.pokemon = pokemon;
-        this.name = name;
     }
 
     @Override
     public String getName() {
-        return this.name;
+        return super.getName();
     }
 
     @Override
@@ -28,6 +24,6 @@ public class OpponentAI extends AbstractFighter {
     }
 
     public static int randomNumber(int maxNumber) {
-        return (int) (Math.random() * (maxNumber - 1));
+        return (int) (Math.random() * (maxNumber));
     }
 }

@@ -7,8 +7,6 @@ import java.util.Scanner;
 public class UserFighter extends AbstractFighter {
 
     private Scanner inputScanner;
-    private Pokemon pokemon;
-    private String name;
 
     public UserFighter(Pokemon pokemon, String name) {
         super(pokemon, name);
@@ -21,12 +19,13 @@ public class UserFighter extends AbstractFighter {
     }
 
     public Pokemon getPokemon() {
-        return this.pokemon;
+        return super.getPokemon();
     }
 
     @Override
     public Attack chooseAttack(Battle battleContext) {
         System.out.println("Choose an attack for " + activePokemon.getName());
+
         List<Attack> availableMoves = activePokemon.getMoves();
 
         for (int i = 0; i < availableMoves.size(); i++) {
@@ -40,13 +39,14 @@ public class UserFighter extends AbstractFighter {
         } else {
             System.out
                     .println("Oh no! Invalid choice! " + activePokemon.getName() + "uses the first available attack.");
-            return availableMoves.get(attackChoice - 1);
+            return availableMoves.get(attackChoice);
         }
     }
 
     /**
-     * ChatGPT assisted me in creating this method, because I'm not very familiar
-     * with Scanner.
+     * Artificial Intelligence assisted me in creating this method, because I'm not
+     * very familiar
+     * with using Scanner.
      * I made sure to thoroughly read the code and understand it, and why
      * the method works.
      * 
@@ -66,16 +66,25 @@ public class UserFighter extends AbstractFighter {
     private int readUserInput(int maxChoice) {
         int choice = -1;
 
-        while (choice == -1 || choice > maxChoice) {
+        while (choice < 1 || choice > maxChoice) {
             System.out.print("Enter a choice between 1 - " + maxChoice);
-        }
+            System.out.println();
 
-        try {
-            choice = inputScanner.nextInt();
-        } catch (InputMismatchException e) {
-            System.out.println("Invalid. Please enter a number (int) between 1 and " + maxChoice);
-            inputScanner.next();
-            choice = -1;
+            try {
+                String line = inputScanner.nextLine();
+
+                choice = Integer.parseInt(line);
+
+                if (choice < 1 || choice > maxChoice) {
+                    System.out.println("Invalid choice. Pick a number between 1 and " + maxChoice);
+                    System.out.println();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid. Please enter a number (int) between 1 and " + maxChoice);
+                System.out.println();
+                inputScanner.next();
+                choice = -1;
+            }
         }
         return choice;
     }

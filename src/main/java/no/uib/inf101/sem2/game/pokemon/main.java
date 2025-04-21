@@ -2,7 +2,7 @@ package no.uib.inf101.sem2.game.pokemon;
 
 import java.util.List;
 
-public class main {
+public class Main {
     public static void main(String[] args) {
 
         Attack Tackle = new Attack("Tackle", 20, PokemonTypes.NORMAL);
@@ -18,8 +18,11 @@ public class main {
         List<Attack> squirtleMoves = List.of(Bubble, Tackle);
         Pokemon Squirtle = new Pokemon("Squirtle", PokemonTypes.WATER, 120, 35, 50, 10, squirtleMoves);
 
-        UserFighter player = new UserFighter(Squirtle, "Trainers Pokemon");
-        OpponentAI playerAi = new OpponentAI(Bulbasaur, "AI Pokemon");
+        Pokemon Giratina = new Pokemon("Giratina", PokemonTypes.ROCK, 150, 35, 35, 10, squirtleMoves);
+        Pokemon Electrivire = new Pokemon("Electrivire", PokemonTypes.FIRE, 150, 40, 40, 10, bulbasaurMoves);
+
+        UserFighter player = new UserFighter(Electrivire, "Trainers Pokemon");
+        OpponentAI playerAi = new OpponentAI(Giratina, "AI Pokemon");
 
         Battle battle = new Battle(player, playerAi);
         battle.startBattle();

@@ -11,12 +11,16 @@ public abstract class AbstractFighter implements IFighter {
      * @param name
      */
 
-    private String name;
+    protected String name;
     public Pokemon activePokemon;
 
     public AbstractFighter(Pokemon pokemon, String pokeName) {
         this.activePokemon = pokemon;
         this.name = pokeName;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public Pokemon getPokemon() {

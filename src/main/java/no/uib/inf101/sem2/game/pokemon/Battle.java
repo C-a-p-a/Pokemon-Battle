@@ -23,8 +23,10 @@ public class Battle {
 
         if (p1Cooldown >= p2Cooldown) {
             this.currentPlayer = this.playerFighter;
+            this.otherPlayer = opponentFighter;
         } else
             this.currentPlayer = this.opponentFighter;
+        this.otherPlayer = this.playerFighter;
 
         if (currentPlayer == playerFighter) {
             this.otherPlayer = opponentFighter;
@@ -48,16 +50,14 @@ public class Battle {
 
         List<Attack> squirtleMoves = List.of(Bubble, Tackle);
         Pokemon Squirtle = new Pokemon("Squirtle", PokemonTypes.WATER, 120, 35, 50, 10, squirtleMoves);
+
+        Pokemon Giratina = new Pokemon("Giratina", PokemonTypes.ROCK, 150, 35, 35, 10, squirtleMoves);
+        Pokemon Electrivire = new Pokemon("Electrivire", PokemonTypes.FIRE, 150, 40, 40, 10, bulbasaurMoves);
     }
 
     public void startBattle() {
         while (!battleOver) {
             displayStatus();
-
-            if (currentPlayer == playerFighter) {
-                otherPlayer = opponentFighter;
-            } else
-                otherPlayer = playerFighter;
 
             executeTurn();
             checkWinCondition();
@@ -70,29 +70,31 @@ public class Battle {
         if (battleOver) {
             return;
         }
+
+        System.out.println("---- " + currentPlayer.getName() + "'s turn' ----");
         Attack chosenAttack = currentPlayer.chooseAttack(this);
 
         if (chosenAttack != null) {
             int damage = calculateDamage(chosenAttack, currentPlayer.getPokemon(), otherPlayer.getPokemon());
 
             otherPlayer.getPokemon().takeDamage(damage);
-            System.out.println(currentPlayer.getName() + " used " + chosenAttack + " on " + otherPlayer.getName()
-                    + " took " + damage + " amount of damage!" + otherPlayer.getName()
+            System.out.println(currentPlayer.getPokemon().getName() + " used " + chosenAttack + " on "
+                    + otherPlayer.getPokemon().getName()
+                    + " took " + damage + " amount of damage! " + otherPlayer.getPokemon().getName()
                     + " is now left with " + otherPlayer.getPokemon().getHP() + "/"
                     + otherPlayer.getPokemon().getMaxHP());
-
-            checkWinCondition();
+            System.out.println();
             switchTurn();
+
         } else
-            throw new NullPointerException("Chosen attack cannot be null");
+            throw new NullPointerException("Chosen attack cannot be null! Switching turns!");
+
     }
 
     public void switchTurn() {
-        if (this.currentPlayer == this.playerFighter) {
-            this.currentPlayer = this.opponentFighter;
-        } else {
-            this.currentPlayer = this.playerFighter;
-        }
+        IFighter temporary = this.currentPlayer;
+        this.currentPlayer = this.otherPlayer;
+        this.otherPlayer = temporary;
 
     }
 
@@ -116,20 +118,37 @@ public class Battle {
     }
 
     public void displayWinner() {
+
         if (otherPlayer.getPokemon().hasFainted()) {
-            System.out.println(currentPlayer.getName() + "has won!");
+            System.out.println("======= WE HAVE A WINNER!!!!! ======");
+            System.out.println(currentPlayer.getPokemon().getName() + " has won!");
         } else if (currentPlayer.getPokemon().hasFainted()) {
-            System.out.println(otherPlayer.getName() + "has won!");
+            System.out.println(otherPlayer.getPokemon().getName() + " has won!");
         } else
             System.out.println("No winner yet!");
     }
 
     public void displayStatus() {
-        System.out.println(currentPlayer.getName() + " vs " + otherPlayer.getName());
-        System.out.println(currentPlayer.getName() + " is currently on " + currentPlayer.getPokemon().getHP() + "/"
-                + currentPlayer.getPokemon().getMaxHP() + ".");
-        System.out.println(otherPlayer.getName() + " is currently on " + otherPlayer.getPokemon().getHP() + "/"
-                + otherPlayer.getPokemon().getMaxHP() + ".");
+
+        System.out.println("======= BATTLE STATUS! =======");
+        System.out.println();
+        System.out.println(currentPlayer.getPokemon().getName() + " vs " + otherPlayer.getPokemon().getName());
+        System.out.println(
+                currentPlayer.getPokemon().getName() + " is currently on " + currentPlayer.getPokemon().getHP() + "/"
+                        + currentPlayer.getPokemon().getMaxHP() + ".");
+        System.out.println(
+                otherPlayer.getPokemon().getName() + " is currently on " + otherPlayer.getPokemon().getHP() + "/"
+                        + otherPlayer.getPokemon().getMaxHP() + ".");
+        System.out.println();
+        System.out.println("=========================");
+    }
+
+    public IFighter getCurrentPlayer() {
+        return this.currentPlayer;
+    }
+
+    public IFighter getOtherPlayer() {
+        return this.otherPlayer;
     }
 
 }
