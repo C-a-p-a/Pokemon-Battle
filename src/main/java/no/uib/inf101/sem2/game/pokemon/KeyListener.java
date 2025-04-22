@@ -6,6 +6,7 @@ public class KeyListener implements java.awt.event.KeyListener {
 
     private Battle battle;
     private UserFighter userFighter;
+    int attackIndex = -1;
 
     public KeyListener(Battle battle, UserFighter fighter) {
         this.battle = battle;
@@ -22,29 +23,22 @@ public class KeyListener implements java.awt.event.KeyListener {
     @Override
     public void keyPressed(KeyEvent key) {
         if (key.getKeyCode() == KeyEvent.VK_1) {
-            if (battle.currentTurn()) {
-                userFighter.pickAttack(1);
-                return;
-            }
+            attackIndex = 0;
         }
-        if (key.getKeyCode() == KeyEvent.VK_2) {
-            if (battle.currentTurn()) {
-                userFighter.pickAttack(2);
-                return;
-            }
+        if (key.getKeyCode() == KeyEvent.VK_1) {
+            attackIndex = 1;
         }
-        if (key.getKeyCode() == KeyEvent.VK_3) {
-            if (battle.currentTurn()) {
-                userFighter.pickAttack(3);
-                return;
-            }
+        if (key.getKeyCode() == KeyEvent.VK_1) {
+            attackIndex = 2;
         }
-        if (key.getKeyCode() == KeyEvent.VK_4) {
-            if (battle.currentTurn()) {
-                userFighter.pickAttack(4);
-                return;
-            }
+        if (key.getKeyCode() == KeyEvent.VK_1) {
+            attackIndex = 3;
         }
+
+        if (attackIndex != 1) {
+            userFighter.registerChosenAttack(attackIndex);
+        }
+
     }
 
     /**
