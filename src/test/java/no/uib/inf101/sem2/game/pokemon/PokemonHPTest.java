@@ -10,7 +10,10 @@ import java.util.Collections;
 import org.junit.jupiter.api.Test;
 
 public class PokemonHPTest {
-
+    /***
+     * @Test
+     *       Tests that when a Pokemon takes damage, it loses the same amount of HP
+     */
     @Test
     void testTakeDamageReducesHP() {
         Pokemon testPokemon = new Pokemon("Testimon", PokemonTypes.WATER, 100, 50, 50, 0, Collections.emptyList());
@@ -26,6 +29,10 @@ public class PokemonHPTest {
         assertFalse(testPokemon.hasFainted());
     }
 
+    /**
+     * @Test
+     *       If a pokemon reaches 0 HP, it should faint
+     */
     @Test
     void takeDamageUntilFaint() {
         Pokemon testPokemon = new Pokemon("Testimon", PokemonTypes.WATER, 100, 50, 50, 0, Collections.emptyList());

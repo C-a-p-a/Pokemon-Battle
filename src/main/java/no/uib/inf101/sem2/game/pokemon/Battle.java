@@ -66,6 +66,12 @@ public class Battle {
         displayWinner();
     }
 
+    public void restartBattle() {
+        while (battleOver) {
+            startBattle();
+        }
+    }
+
     public void executeTurn() {
         if (battleOver) {
             return;
@@ -123,6 +129,7 @@ public class Battle {
             System.out.println("======= WE HAVE A WINNER!!!!! ======");
             System.out.println(currentPlayer.getPokemon().getName() + " has won!");
         } else if (currentPlayer.getPokemon().hasFainted()) {
+            System.out.println("======= WE HAVE A WINNER!!!!! ======");
             System.out.println(otherPlayer.getPokemon().getName() + " has won!");
         } else
             System.out.println("No winner yet!");
@@ -149,6 +156,14 @@ public class Battle {
 
     public IFighter getOtherPlayer() {
         return this.otherPlayer;
+    }
+
+    public boolean currentTurn() {
+        if (currentPlayer == playerFighter) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

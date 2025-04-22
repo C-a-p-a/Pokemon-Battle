@@ -65,7 +65,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
             contentPane.setBackground(Color.GREEN);
         } catch (InterruptedException e) {
             System.err.println("Waiting for background aborted: ");
-            Thread.currentThread().interrupt(); // Gjenopprett avbruddsstatus
+            Thread.currentThread().interrupt();
             contentPane.setBackground(Color.GREEN);
         } catch (Exception e) {
             System.err.println("Unexpected error when waiting: ");
@@ -107,7 +107,6 @@ public class PokemonGUI extends JFrame { // Nytt navn
         try {
             URL opponentUrl = URI.create(OPPONENT_GIF_URL).toURL();
             ImageIcon opponentIcon = new ImageIcon(opponentUrl);
-            // Vent på motstander-GIF
             int opponentId = 2;
             tracker.addImage(opponentIcon.getImage(), opponentId);
 

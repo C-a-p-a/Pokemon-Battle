@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 
 public class AttackTest {
 
+    /**
+     * Tests that the attack getters returns the expected values
+     */
     @Test
     void testAttackGetters() {
 

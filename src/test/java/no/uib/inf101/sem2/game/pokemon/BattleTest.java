@@ -42,6 +42,9 @@ public class BattleTest {
 
     }
 
+    /**
+     * Tests wether an attack returns the expected amount of damage
+     */
     @Test
     void calculateDamageReturnsPower() {
 

@@ -89,4 +89,10 @@ public class UserFighter extends AbstractFighter {
         return choice - 1;
     }
 
+    public Attack pickAttack(int number) {
+        List<Attack> availableMoves = activePokemon.getMoves();
+
+        return availableMoves.get(number);
+    }
+
 }

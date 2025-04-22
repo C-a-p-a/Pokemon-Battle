@@ -14,7 +14,7 @@ public enum PokemonTypes {
      * If Water type attacks Fire, the damage is multiplied by 2x.
      * 
      * @param other
-     * @return double efficiency-multiplier
+     * @return double efficiency multiplier
      */
     public double isEffectiveAgainst(PokemonTypes other) {
 
