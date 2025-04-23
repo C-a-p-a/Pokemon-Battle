@@ -1,6 +1,7 @@
 package no.uib.inf101.sem2.game.pokemon;
 
 import java.util.List;
+import java.util.Random;
 
 public class Battle {
 
@@ -12,10 +13,17 @@ public class Battle {
     private boolean battleOver = false;
     private Pokemon player1;
     private Pokemon player2;
+    private Random aiRandom = new Random();
+    private PokemonGUI gui;
 
-    public Battle(IFighter player, IFighter opponent) {
+    public Battle(IFighter player, IFighter opponent, PokemonGUI gui) {
         this.playerFighter = player;
         this.opponentFighter = opponent;
+        this.gui = gui;
+
+        if (this.gui == null) {
+            throw new IllegalArgumentException("PokemonGui cannot be null");
+        }
 
         player1 = playerFighter.getPokemon();
         player2 = opponentFighter.getPokemon();
@@ -57,36 +65,66 @@ public class Battle {
     }
 
     public void startBattle() {
-        if (!battleOver) {
+        while (!battleOver) {
             displayStatus();
-
             executeTurn();
-            checkWinCondition();
-
         }
         displayWinner();
     }
 
-    private void executeFirstTurn() {
+    private void runNextTurn() {
+        if (battleOver) {
+            return;
+        }
+
         if (currentTurn()) {
-            System.out.println("It's your turn!");
+            gui.displayPlayerOptions(currentPlayer.getName(), currentPlayer.getPokemon().getMoves());
         } else if (!currentTurn()) {
-            executeAITurn();
+
+        } else {
+            gui.addMessage("Unknown player... :(");
+            battleOver = true;
         }
     }
 
     private void executeAiTurn() {
-        if(!currentTurn()){
-        System.out.println(currentPlayer.getName() + " sin tur");
-    }
-        Attack chosenAttack = null;
+        if (battleOver || currentTurn()) {
+            return;
+        }
 
-        try{
+        gui.addMessage("\n" + currentPlayer.getName() + "'s turn");
+        Attack chosenAttack = null;
+        Pokemon attackerPokemon = currentPlayer.getPokemon();
+        Pokemon defenderPokemon = otherPlayer.getPokemon();
+
+        try {
             chosenAttack = currentPlayer.chooseAttack(this);
 
-            if(chosenAttack != null){
-                int delayInMS = userFighter.randomNumber(2);
+            if (!currentTurn()) {
+                int delayInMS = aiRandom.nextInt(1510) + 1000;
+                System.out.println(currentPlayer.getName() + " preparing attack...");
+                Thread.sleep(delayInMS);
             }
+        } catch (Exception e) {
+            chosenAttack = null;
+        }
+
+        if (chosenAttack != null) {
+            gui.addMessage(attackerPokemon.getName() + " used " + chosenAttack.getName() + " against "
+                    + defenderPokemon.getName() + "!");
+            int damage = calculateDamage(chosenAttack, attackerPokemon, defenderPokemon);
+            defenderPokemon.takeDamage(damage);
+            gui.addMessage(defenderPokemon.getName() + " took " + damage + "HP!");
+            updateStatus();
+        } else {
+            gui.addMessage(currentPlayer.getName() + " chose not to attack!");
+        }
+        checkWinCondition();
+        if (!battleOver) {
+            switchTurn();
+            runNextTurn();
+        } else {
+            gui.showWinner(determineWinnerMessage());
         }
     }
 
@@ -97,16 +135,38 @@ public class Battle {
     }
 
     public void executeTurn() {
+        checkWinCondition();
         if (battleOver) {
             return;
         }
+        Attack chosenAttack = null;
+        Pokemon attackerPokemon = currentPlayer.getPokemon();
+        Pokemon defenderPokemon = otherPlayer.getPokemon();
 
-        if (currentTurn()) {
-            System.out.println(currentPlayer.getName() + "'s turn");
-            System.out.println("Choose an attack. Press 1-" + playerFighter.getPokemon().getMoves().size());
+        try {
+            chosenAttack = currentPlayer.chooseAttack(this);
+
+            if (!currentTurn()) {
+                int delayInMS = aiRandom.nextInt(1510) + 1000;
+                System.out.println(currentPlayer.getName() + " preparing attack...");
+                Thread.sleep(delayInMS);
+            }
+        } catch (Exception e) {
+            System.out.println("error during chooseAttack for" + currentPlayer.getName());
+            chosenAttack = null;
+        }
+
+        if (chosenAttack != null) {
+            int damage = calculateDamage(chosenAttack, attackerPokemon, defenderPokemon);
+            defenderPokemon.takeDamage(damage);
+            System.out.println(defenderPokemon.getName() + " took damage");
+        }
+
+        checkWinCondition();
+        if (!battleOver) {
+            switchTurn();
         } else {
-            System.out.println(currentPlayer.getName() + "'s turn");
-            Attack chosenAttack = null;
+            displayWinner();
         }
 
         // Attack chosenAttack = currentPlayer.chooseAttack(this);

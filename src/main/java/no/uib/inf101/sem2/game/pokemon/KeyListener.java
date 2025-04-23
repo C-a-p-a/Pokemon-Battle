@@ -35,7 +35,7 @@ public class KeyListener implements java.awt.event.KeyListener {
             attackIndex = 3;
         }
 
-        if (attackIndex != 1) {
+        if (attackIndex != -1) {
             userFighter.registerChosenAttack(attackIndex);
         }
 
