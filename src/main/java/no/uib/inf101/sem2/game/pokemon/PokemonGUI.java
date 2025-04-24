@@ -26,8 +26,25 @@ public class PokemonGUI extends JFrame { // Nytt navn
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
 
+    // sprite sizes
+    private final int Sprite_Target_Width = 200;
+    private final int Sprite_Target_Height = 200;
+
     // pokemon font
     private Font pokemonFont = null;
+
+    // information boxes locations
+    private final int INFO_Width = 200;
+    private final int INFO_Height = 40;
+    private final int PLAYER_HP_X = PLAYER_X - 40;
+    private final int PLAYER_XP_Y = PLAYER_Y + Sprite_Target_Height + 5;
+    private final int OPPONENT_HP_X = OPPONENT_X - 40;
+    private final int OPPONENT_HP_Y = OPPONENT_Y - INFO_Height - 5;
+
+    private final int TEXTBOX_X = WINDOW_WIDTH - 330;
+    private final int TEXTBOX_Y = 30;
+    private final int TEXTBOX_W = 300;
+    private final int TEXTBOX_H = 100;
 
     // gui components
     private JLabel playerSpriteLabel;
@@ -44,11 +61,11 @@ public class PokemonGUI extends JFrame { // Nytt navn
 
     // Pokemon position, only x/y pos
 
-    private static final int PLAYER_X = 50;
-    private static final int PLAYER_Y = 280;
+    private static final int PLAYER_X = 85;
+    private static final int PLAYER_Y = 320;
 
-    private static final int OPPONENT_X = 400;
-    private static final int OPPONENT_Y = 100;
+    private static final int OPPONENT_X = 520;
+    private static final int OPPONENT_Y = 150;
 
     public PokemonGUI() {
         setTitle("PokemonBattle SEM2 INF101 V25");
@@ -76,8 +93,8 @@ public class PokemonGUI extends JFrame { // Nytt navn
         }
 
         // player sprites
-        playerSpriteLabel = createGifLabel(PLAYER_GIF_URL, "Player");
-        opponentSpriteLabel = createGifLabel(OPPONENT_GIF_URL, "Opponent");
+        playerSpriteLabel = createGifLabel(PLAYER_GIF_URL, "Player", Sprite_Target_Width, Sprite_Target_Height);
+        opponentSpriteLabel = createGifLabel(OPPONENT_GIF_URL, "Opponent", Sprite_Target_Width, Sprite_Target_Height);
 
         if (playerSpriteLabel != null) {
             int width = playerSpriteLabel.getIcon().getIconWidth();
@@ -94,8 +111,8 @@ public class PokemonGUI extends JFrame { // Nytt navn
 
         // player information textlabel
         playerNameLabel = new JLabel("Player");
-        playerNameLabel.setBounds(WINDOW_WIDTH - 270, WINDOW_HEIGHT - 210, 200, 20);
-        playerNameLabel.setForeground(Color.WHITE);
+        playerNameLabel.setBounds(PLAYER_HP_X + 75, PLAYER_XP_Y - 260, INFO_Width, 20);
+        playerNameLabel.setForeground(Color.BLUE);
         layeredPane.add(playerNameLabel, JLayeredPane.MODAL_LAYER);
 
         // player hp bar
@@ -104,13 +121,13 @@ public class PokemonGUI extends JFrame { // Nytt navn
         playerHpBar.setStringPainted(true);
         playerHpBar.setForeground(Color.GREEN);
         playerHpBar.setBackground(Color.GRAY);
-        playerHpBar.setBounds(WINDOW_WIDTH - 270, WINDOW_HEIGHT - 190, 200, 15);
+        playerHpBar.setBounds(PLAYER_HP_X + 75, PLAYER_XP_Y - 230, INFO_Width, 25);
         layeredPane.add(playerHpBar, JLayeredPane.MODAL_LAYER);
 
         // opponent information textlabel
         opponentNameLabel = new JLabel("Opponent");
-        opponentNameLabel.setBounds(50, 50, 200, 20);
-        opponentNameLabel.setForeground(Color.WHITE);
+        opponentNameLabel.setBounds(OPPONENT_HP_X + 60, OPPONENT_HP_Y + 30, INFO_Width, 20);
+        opponentNameLabel.setForeground(Color.RED);
         layeredPane.add(opponentNameLabel, JLayeredPane.MODAL_LAYER);
 
         // opponent hp bar
@@ -119,7 +136,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
         opponentHpBar.setStringPainted(true);
         opponentHpBar.setForeground(Color.GREEN);
         opponentHpBar.setBackground(Color.GRAY);
-        opponentHpBar.setBounds(50, 70, 200, 15);
+        opponentHpBar.setBounds(OPPONENT_HP_X + 20, OPPONENT_HP_Y + 45, INFO_Width, 20);
         layeredPane.add(opponentHpBar, JLayeredPane.MODAL_LAYER);
 
         // text area
@@ -130,7 +147,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
         textArea.setFont(pokemonFont);
 
         messageScrollPane = new JScrollPane(textArea);
-        messageScrollPane.setBounds(50, WINDOW_HEIGHT - 150, WINDOW_WIDTH - 100, 100);
+        messageScrollPane.setBounds(TEXTBOX_X, TEXTBOX_Y, TEXTBOX_W, TEXTBOX_H);
         layeredPane.add(messageScrollPane, JLayeredPane.MODAL_LAYER);
 
         setContentPane(layeredPane);
@@ -188,14 +205,20 @@ public class PokemonGUI extends JFrame { // Nytt navn
         }
     }
 
-    private JLabel createGifLabel(String urlString, String description) {
+    private JLabel createGifLabel(String urlString, String description, int targetWidth, int targetHeight) {
         try {
             URL gifUrl = URI.create(urlString).toURL();
             ImageIcon icon = new ImageIcon(gifUrl);
+
             MediaTracker tracker = new MediaTracker(this);
+            Image originalImage = icon.getImage();
             tracker.addImage(icon.getImage(), 1);
             tracker.waitForID(1);
-            return new JLabel(icon);
+
+            Image scaledImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT);
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+            return new JLabel(scaledIcon);
         } catch (Exception e) {
             System.out.println("error couldnt load gif");
             return null;
@@ -257,6 +280,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
         });
     }
 
+    // main-method for testing purposes only
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new PokemonGUI();

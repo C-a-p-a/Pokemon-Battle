@@ -25,19 +25,20 @@ public class KeyListener implements java.awt.event.KeyListener {
         if (key.getKeyCode() == KeyEvent.VK_1) {
             attackIndex = 0;
         }
-        if (key.getKeyCode() == KeyEvent.VK_1) {
+        if (key.getKeyCode() == KeyEvent.VK_2) {
             attackIndex = 1;
         }
-        if (key.getKeyCode() == KeyEvent.VK_1) {
+        if (key.getKeyCode() == KeyEvent.VK_3) {
             attackIndex = 2;
         }
-        if (key.getKeyCode() == KeyEvent.VK_1) {
+        if (key.getKeyCode() == KeyEvent.VK_4) {
             attackIndex = 3;
         }
 
         if (attackIndex != -1) {
-            userFighter.registerChosenAttack(attackIndex);
+            battle.playerAttackInput(attackIndex);
         }
+        attackIndex = -1;
 
     }
 

@@ -1,7 +1,9 @@
 package no.uib.inf101.sem2.game.pokemon;
 
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Random;
+import javax.swing.Timer;
 
 public class Battle {
 
@@ -15,6 +17,7 @@ public class Battle {
     private Pokemon player2;
     private Random aiRandom = new Random();
     private PokemonGUI gui;
+    private Timer aiActionTimer;
 
     public Battle(IFighter player, IFighter opponent, PokemonGUI gui) {
         this.playerFighter = player;
@@ -67,8 +70,65 @@ public class Battle {
         if (currentTurn()) {
             gui.displayPlayerOptions(currentPlayer.getName(), currentPlayer.getPokemon().getMoves());
         } else if (!currentTurn()) {
+            prepareAiAttack();
             executeAiTurn();
         }
+    }
+
+    private void prepareAiAttack() {
+        if (battleOver || currentTurn()) {
+            return;
+        }
+
+        final Attack chosenAttack;
+        Pokemon attackerPokemon = currentPlayer.getPokemon();
+
+        try {
+            chosenAttack = currentPlayer.chooseAttack(this);
+        } catch (Exception e) {
+            gui.addMessage("error during AI attack");
+            switchTurn();
+            runNextTurn();
+            return;
+        }
+        gui.addMessage(currentPlayer.getName() + " is preparing an attack...");
+
+        ActionListener executeAttack = event -> {
+            executeAiAttack(chosenAttack, attackerPokemon);
+        };
+        int delayInMS = aiRandom.nextInt(1500) + 1500;
+        aiActionTimer = new Timer(delayInMS, executeAttack);
+        aiActionTimer.setRepeats(false);
+        aiActionTimer.start();
+
+    }
+
+    private void executeAiAttack(Attack chosenAttack, Pokemon attackerPokemon) {
+        if (battleOver) {
+            return;
+        }
+        Pokemon defenderPokemon = otherPlayer.getPokemon();
+
+        gui.addMessage(attackerPokemon.getName() + " used " + chosenAttack.getName() + " against "
+                + defenderPokemon.getName() + "! ");
+        int damage = calculateDamage(chosenAttack, attackerPokemon, defenderPokemon);
+        defenderPokemon.takeDamage(damage);
+
+        gui.addMessage(defenderPokemon.getName() + " lost " + damage + " HP");
+        updateGuiStatus();
+
+        ActionListener afterAiAttack = event -> {
+            checkWinCondition();
+            if (!battleOver) {
+                switchTurn();
+                runNextTurn();
+            } else {
+                gui.showWinner(generateWinnerMessage());
+            }
+        };
+        Timer afterAiTimer = new Timer(2500, afterAiAttack);
+        afterAiTimer.setRepeats(false);
+        afterAiTimer.start();
     }
 
     private void executeAiTurn() {
@@ -103,7 +163,7 @@ public class Battle {
 
             defenderPokemon.takeDamage(damage);
 
-            gui.addMessage(defenderPokemon.getName() + " took " + damage + "HP!");
+            gui.addMessage(defenderPokemon.getName() + " lost " + damage + "HP!");
         } else {
             gui.addMessage(currentPlayer.getName() + " chose not to attack!");
         }
@@ -148,16 +208,24 @@ public class Battle {
                     + defenderPokemon.getName() + "! ");
             int damage = calculateDamage(chosenAttack, attackerPokemon, defenderPokemon);
             defenderPokemon.takeDamage(damage);
-            gui.addMessage(defenderPokemon.getName() + " took " + damage + " HP!");
+            gui.addMessage(defenderPokemon.getName() + " lost " + damage + " HP!");
+            updateGuiStatus();
+
+            ActionListener afterPlayerAttack = event -> {
+                checkWinCondition();
+                if (!battleOver) {
+                    switchTurn();
+                    runNextTurn();
+                } else {
+                    gui.showWinner(generateWinnerMessage());
+                }
+            };
+            Timer afterPlayerTimer = new Timer(2500, afterPlayerAttack);
+            afterPlayerTimer.setRepeats(false);
+            afterPlayerTimer.start();
 
             checkWinCondition();
-            if (!battleOver) {
-                switchTurn();
-                runNextTurn();
-            } else {
-                updateGuiStatus();
-                gui.showWinner(generateWinnerMessage());
-            }
+
         } else {
             gui.addMessage("Invalid attack choice! Please choose again!");
             gui.displayPlayerOptions(currentPlayer.getName(), attackerPokemon.getMoves());
@@ -211,11 +279,11 @@ public class Battle {
         Pokemon p2 = opponentFighter.getPokemon();
 
         if (p2.hasFainted()) {
-            return playerFighter.getName() + " and " + playerFighter.getPokemon().getName() + " has won! ";
+            return playerFighter.getName() + "'s " + playerFighter.getPokemon().getName() + " has won! ";
         }
 
         if (p1.hasFainted()) {
-            return opponentFighter.getName() + " and " + opponentFighter.getPokemon().getName() + " has won! ";
+            return opponentFighter.getName() + "'s' " + opponentFighter.getPokemon().getName() + " has won! ";
 
         } else {
             return "Unknown winner - error";

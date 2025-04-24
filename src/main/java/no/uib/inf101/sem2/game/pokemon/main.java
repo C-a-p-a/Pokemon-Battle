@@ -15,28 +15,23 @@ public class Main {
             Attack SeedBomb = new Attack("Seed Bomb", 25, PokemonTypes.GRASS);
 
             List<Attack> electrivireMoves = List.of(Incinerate, Tackle, BugBuzz, RockSlide);
-        })
+            Pokemon Electrivire = new Pokemon("Electrivire", PokemonTypes.ELECTRIC, 175, 35, 40, 5, electrivireMoves);
 
-        
-        
-        
-        
+            List<Attack> giratinaMoves = List.of(SeedBomb, Bubble, RockSlide, Tackle);
+            Pokemon Giratina = new Pokemon("Giratina", PokemonTypes.ROCK, 185, 35, 40, 10, giratinaMoves);
 
-        
+            UserFighter player = new UserFighter(Electrivire, "Trainers Pokemon");
+            OpponentAI playerAi = new OpponentAI(Giratina, "AI Pokemon");
 
-        List<Attack> bulbasaurMoves = List.of(SeedBomb, Tackle);
-        Pokemon Bulbasaur = new Pokemon("Bulbasaur", PokemonTypes.GRASS, 110, 40, 40, 10, bulbasaurMoves);
+            PokemonGUI gui = new PokemonGUI();
 
-        List<Attack> squirtleMoves = List.of(Bubble, Tackle);
-        Pokemon Squirtle = new Pokemon("Squirtle", PokemonTypes.WATER, 120, 35, 50, 10, squirtleMoves);
+            Battle battle = new Battle(player, playerAi, gui);
 
-        Pokemon Giratina = new Pokemon("Giratina", PokemonTypes.ROCK, 150, 35, 35, 10, squirtleMoves);
-        Pokemon Electrivire = new Pokemon("Electrivire", PokemonTypes.FIRE, 150, 40, 40, 10, bulbasaurMoves);
+            KeyListener keyListener = new KeyListener(battle, player);
 
-        UserFighter player = new UserFighter(Electrivire, "Trainers Pokemon");
-        OpponentAI playerAi = new OpponentAI(Giratina, "AI Pokemon");
+            gui.addKeyListener(keyListener);
 
-        Battle battle = new Battle(player, playerAi);
-        battle.startBattle();
+            battle.startBattle();
+        });
     }
 }

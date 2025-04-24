@@ -18,21 +18,6 @@ public class OpponentAI extends AbstractFighter {
         List<Attack> aiMoves = activePokemon.getMoves();
         int maxNumberChoice = activePokemon.getMoves().size();
 
-        Attack chosen = aiMoves.get(maxNumberChoice - 1);
-
-        if (chosen != null) {
-            try {
-                int delayInMS = randomNumber(2000) + 3000;
-                System.out.println(getName() + " gjør klart angripet sitt... ");
-                Thread.sleep(delayInMS);
-            } catch (InterruptedException e) {
-                System.out.println("The AI got disturbed while preparing its attack!");
-                Thread.currentThread().interrupt();
-
-            }
-
-        }
-
         return aiMoves.get(randomNumber(maxNumberChoice - 1));
 
     }

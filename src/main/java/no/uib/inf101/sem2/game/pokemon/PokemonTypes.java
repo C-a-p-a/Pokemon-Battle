@@ -1,7 +1,7 @@
 package no.uib.inf101.sem2.game.pokemon;
 
 public enum PokemonTypes {
-    FIRE, WATER, GRASS, NORMAL, ROCK, BUG;
+    FIRE, WATER, GRASS, NORMAL, ROCK, BUG, ELECTRIC;
 
     /**
      * Keeps track of what types are effective against each other.
@@ -33,6 +33,18 @@ public enum PokemonTypes {
                     return 0.5;
                 }
                 if (other == BUG) {
+                    return 2;
+                } else
+                    return 1;
+
+            case ELECTRIC:
+                if (other == WATER) {
+                    return 0.5;
+                }
+                if (other == FIRE) {
+                    return 2;
+                }
+                if (other == GRASS) {
                     return 2;
                 } else
                     return 1;
