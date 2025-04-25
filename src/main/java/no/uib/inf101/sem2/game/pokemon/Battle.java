@@ -18,15 +18,13 @@ public class Battle {
     private Random aiRandom = new Random();
     private PokemonGUI gui;
     private Timer aiActionTimer;
+    private PokemonTypes types;
+    private boolean actionInProgress = false;
 
     public Battle(IFighter player, IFighter opponent, PokemonGUI gui) {
         this.playerFighter = player;
         this.opponentFighter = opponent;
         this.gui = gui;
-
-        if (this.gui == null) {
-            throw new IllegalArgumentException("PokemonGui cannot be null");
-        }
 
         player1 = playerFighter.getPokemon();
         player2 = opponentFighter.getPokemon();
@@ -68,10 +66,10 @@ public class Battle {
         updateGuiStatus();
 
         if (currentTurn()) {
+            actionInProgress = false;
             gui.displayPlayerOptions(currentPlayer.getName(), currentPlayer.getPokemon().getMoves());
         } else if (!currentTurn()) {
             prepareAiAttack();
-            executeAiTurn();
         }
     }
 
@@ -79,6 +77,7 @@ public class Battle {
         if (battleOver || currentTurn()) {
             return;
         }
+        actionInProgress = true;
 
         final Attack chosenAttack;
         Pokemon attackerPokemon = currentPlayer.getPokemon();
@@ -87,6 +86,7 @@ public class Battle {
             chosenAttack = currentPlayer.chooseAttack(this);
         } catch (Exception e) {
             gui.addMessage("error during AI attack");
+            actionInProgress = false;
             switchTurn();
             runNextTurn();
             return;
@@ -105,6 +105,7 @@ public class Battle {
 
     private void executeAiAttack(Attack chosenAttack, Pokemon attackerPokemon) {
         if (battleOver) {
+            actionInProgress = false;
             return;
         }
         Pokemon defenderPokemon = otherPlayer.getPokemon();
@@ -123,60 +124,13 @@ public class Battle {
                 switchTurn();
                 runNextTurn();
             } else {
+                actionInProgress = false;
                 gui.showWinner(generateWinnerMessage());
             }
         };
         Timer afterAiTimer = new Timer(2500, afterAiAttack);
         afterAiTimer.setRepeats(false);
         afterAiTimer.start();
-    }
-
-    private void executeAiTurn() {
-        if (battleOver || currentTurn()) {
-            return;
-        }
-
-        gui.addMessage("\n" + currentPlayer.getName() + "'s turn");
-        Attack chosenAttack = null;
-        Pokemon attackerPokemon = currentPlayer.getPokemon();
-        Pokemon defenderPokemon = otherPlayer.getPokemon();
-
-        try {
-            chosenAttack = currentPlayer.chooseAttack(this);
-
-            if (!currentTurn()) {
-                if (chosenAttack != null) {
-                    int delayInMS = aiRandom.nextInt(1510) + 1000;
-                    System.out.println(currentPlayer.getName() + " preparing attack...");
-                    Thread.sleep(delayInMS);
-                }
-            }
-        } catch (Exception e) {
-            chosenAttack = null;
-        }
-
-        if (chosenAttack != null) {
-            gui.addMessage(attackerPokemon.getName() + " used " + chosenAttack.getName() + " against "
-                    + defenderPokemon.getName() + "!");
-
-            int damage = calculateDamage(chosenAttack, attackerPokemon, defenderPokemon);
-
-            defenderPokemon.takeDamage(damage);
-
-            gui.addMessage(defenderPokemon.getName() + " lost " + damage + "HP!");
-        } else {
-            gui.addMessage(currentPlayer.getName() + " chose not to attack!");
-        }
-
-        checkWinCondition();
-
-        if (!battleOver) {
-            switchTurn();
-            runNextTurn();
-
-        } else {
-            gui.showWinner(generateWinnerMessage());
-        }
     }
 
     /**
@@ -189,7 +143,12 @@ public class Battle {
 
     public void playerAttackInput(int attackIndex) {
         if (battleOver || !currentTurn()) {
-            System.out.println("It's not your turn yet!");
+            gui.addMessage("Wait for your turn");
+            return;
+        }
+
+        if (actionInProgress) {
+            gui.addMessage("Nice try! You have already attacked this turn.");
             return;
         }
 
@@ -204,9 +163,11 @@ public class Battle {
         }
 
         if (chosenAttack != null) {
+            actionInProgress = true;
             gui.addMessage(attackerPokemon.getName() + " used " + chosenAttack.getName() + " against "
                     + defenderPokemon.getName() + "! ");
             int damage = calculateDamage(chosenAttack, attackerPokemon, defenderPokemon);
+
             defenderPokemon.takeDamage(damage);
             gui.addMessage(defenderPokemon.getName() + " lost " + damage + " HP!");
             updateGuiStatus();
@@ -217,14 +178,13 @@ public class Battle {
                     switchTurn();
                     runNextTurn();
                 } else {
+                    actionInProgress = false;
                     gui.showWinner(generateWinnerMessage());
                 }
             };
-            Timer afterPlayerTimer = new Timer(2500, afterPlayerAttack);
+            Timer afterPlayerTimer = new Timer(1750, afterPlayerAttack);
             afterPlayerTimer.setRepeats(false);
             afterPlayerTimer.start();
-
-            checkWinCondition();
 
         } else {
             gui.addMessage("Invalid attack choice! Please choose again!");

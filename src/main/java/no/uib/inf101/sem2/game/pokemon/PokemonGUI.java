@@ -14,7 +14,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
 
     // Img links
     private static final String BACKGROUND_IMAGE_URL = "https://storage.ko-fi.com/cdn/useruploads/display/088aab6e-5910-4edd-82c5-9a1bca2b5e13_mdpokemonbattle_notextbox.png";
-    private static final String PLAYER_GIF_URL = "https://raw.githubusercontent.com/Leonardo-Gomiero/PokeDuel/refs/heads/main/src/main/resources/Gifs/backElectivire.gif";
+    private static final String PLAYER_GIF_URL = "https://github.com/Leonardo-Gomiero/PokeDuel/blob/main/src/main/resources/Gifs/backRayquaza.gif?raw=true";
     private static final String OPPONENT_GIF_URL = "https://raw.githubusercontent.com/Leonardo-Gomiero/PokeDuel/refs/heads/main/src/main/resources/Gifs/Giratina.gif";
 
     // I do not own any of the images used. Some images are taken from
@@ -260,7 +260,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
 
     public void showWinner(String winnerMessage) {
         SwingUtilities.invokeLater(() -> {
-            addMessage("======= BATTLE STARTED =======");
+            addMessage("\n ======= BATTLE STARTED =======");
             addMessage(winnerMessage);
             JOptionPane.showMessageDialog(this, winnerMessage, "THE BATTLE IS OVER!", JOptionPane.INFORMATION_MESSAGE);
         });
@@ -270,7 +270,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
         SwingUtilities.invokeLater(() -> {
             addMessage("\n Your turn, " + playerName);
             if (!moves.isEmpty()) {
-                addMessage("Choose an attack! Press 1-" + moves.size());
+                addMessage("Choose an attack. Press 1-" + moves.size());
                 for (int i = 0; i < moves.size(); i++) {
                     addMessage(" " + (i + 1) + ": " + moves.get(i).getName());
                 }

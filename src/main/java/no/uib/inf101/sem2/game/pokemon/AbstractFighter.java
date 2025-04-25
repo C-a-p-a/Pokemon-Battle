@@ -2,15 +2,6 @@ package no.uib.inf101.sem2.game.pokemon;
 
 public abstract class AbstractFighter implements IFighter {
 
-    /**
-     * Took inspiration from W3Schools;
-     * https://www.w3schools.com/java/java_abstract.asp
-     * 01.04.2025
-     * 
-     * @param pokemon
-     * @param name
-     */
-
     protected String name;
     public Pokemon activePokemon;
 

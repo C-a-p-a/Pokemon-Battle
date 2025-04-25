@@ -14,13 +14,13 @@ public class Main {
             Attack BugBuzz = new Attack("Bug Buzz", 50, PokemonTypes.BUG);
             Attack SeedBomb = new Attack("Seed Bomb", 25, PokemonTypes.GRASS);
 
-            List<Attack> electrivireMoves = List.of(Incinerate, Tackle, BugBuzz, RockSlide);
-            Pokemon Electrivire = new Pokemon("Electrivire", PokemonTypes.ELECTRIC, 175, 35, 40, 5, electrivireMoves);
+            List<Attack> rayquazaMoves = List.of(Incinerate, Tackle, BugBuzz, RockSlide);
+            Pokemon Rayquaza = new Pokemon("Rayquaza", PokemonTypes.ELECTRIC, 175, 35, 40, 5, rayquazaMoves);
 
             List<Attack> giratinaMoves = List.of(SeedBomb, Bubble, RockSlide, Tackle);
             Pokemon Giratina = new Pokemon("Giratina", PokemonTypes.ROCK, 185, 35, 40, 10, giratinaMoves);
 
-            UserFighter player = new UserFighter(Electrivire, "Trainers Pokemon");
+            UserFighter player = new UserFighter(Rayquaza, "Trainers Pokemon");
             OpponentAI playerAi = new OpponentAI(Giratina, "AI Pokemon");
 
             PokemonGUI gui = new PokemonGUI();
