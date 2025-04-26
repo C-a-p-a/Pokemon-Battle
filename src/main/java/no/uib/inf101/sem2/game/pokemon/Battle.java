@@ -11,16 +11,24 @@ public class Battle {
     private IFighter opponentFighter;
     private IFighter currentPlayer;
     private IFighter otherPlayer;
-    private UserFighter userFighter;
     private boolean battleOver = false;
     private Pokemon player1;
     private Pokemon player2;
     private Random aiRandom = new Random();
     private PokemonGUI gui;
     private Timer aiActionTimer;
-    private PokemonTypes types;
     private boolean actionInProgress = false;
 
+    /**
+     * Creates a new battle between two fighters and connects them to the GUI.
+     * 
+     * The Pokemon with the lowest cooldown gets to start attacking. If the cooldown
+     * is equal, the user/player gets to start.
+     * 
+     * @param player
+     * @param opponent
+     * @param gui
+     */
     public Battle(IFighter player, IFighter opponent, PokemonGUI gui) {
         this.playerFighter = player;
         this.opponentFighter = opponent;
@@ -48,6 +56,11 @@ public class Battle {
 
     }
 
+    /**
+     * Checks if the battle is over, and if not - starts the battle between the two
+     * fighters.
+     * Updates the Gui status and runs the next turn
+     **/
     public void startBattle() {
         if (battleOver) {
             gui.addMessage("==== COULD NOT START BATTLE. ====");
@@ -140,7 +153,6 @@ public class Battle {
      * 
      * @param attackIndex
      */
-
     public void playerAttackInput(int attackIndex) {
         if (battleOver || !currentTurn()) {
             gui.addMessage("Wait for your turn");
@@ -193,6 +205,11 @@ public class Battle {
 
     }
 
+    /**
+     * Switches who the currentPlayer is. currentPlayer is who gets to attack.
+     * After an attack has been executed, this method is called in order to switch
+     * turns.
+     */
     public void switchTurn() {
         IFighter temporary = this.currentPlayer;
         this.currentPlayer = this.otherPlayer;
@@ -200,25 +217,73 @@ public class Battle {
 
     }
 
+    /**
+     * Estimates amount of damage an attack will do, based on how effective the
+     * types are against each other.
+     * 
+     * @param attack   - attack used
+     * @param attacker - the pokemon attacking
+     * @param defender - the pokemon defending
+     * @return - estimated damage (int)
+     */
     public int calculateDamage(Attack attack, Pokemon attacker, Pokemon defender) {
-        return attack.getPower();
+        int power = attack.getPower();
+        PokemonTypes attackType = attack.getAttackType();
+        PokemonTypes defendType = defender.getType();
+
+        double effective = 1.0;
+
+        effective = attackType.isEffectiveAgainst(defendType);
+
+        if (effective > 1.0) {
+            gui.addMessage("The attack is SUPER effective");
+        } else if (effective < 1.0) {
+            gui.addMessage("The attack was not very effective...");
+        }
+
+        int estimatedDamage = (int) Math.round(power * effective);
+
+        if (estimatedDamage < 0) {
+            estimatedDamage = 0;
+        }
+        return estimatedDamage;
 
     }
 
+    /**
+     * Checks if any of the fighters/pokemon have fainted (0 HP).
+     * If they have fainted, set battleOver to true.
+     * 
+     */
     public void checkWinCondition() {
         if (currentPlayer.getPokemon().hasFainted() || otherPlayer.getPokemon().hasFainted()) {
             battleOver = true;
         }
     }
 
+    /**
+     * Returns who's turn it is to attack.
+     * 
+     * @return the current attacking player
+     */
     public IFighter getCurrentPlayer() {
         return this.currentPlayer;
     }
 
+    /**
+     * Returns the defending player
+     * 
+     * @return the player currently defending an attack
+     */
     public IFighter getOtherPlayer() {
         return this.otherPlayer;
     }
 
+    /**
+     * This method checks if it is the players/human's turn to attack or not.
+     * 
+     * @return boolean true if it is human's turn to attack - false if AI's turn
+     */
     public boolean currentTurn() {
         if (currentPlayer == playerFighter) {
             return true;

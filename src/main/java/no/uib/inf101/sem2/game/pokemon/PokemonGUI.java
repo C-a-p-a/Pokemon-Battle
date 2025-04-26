@@ -10,19 +10,41 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
-public class PokemonGUI extends JFrame { // Nytt navn
+/**
+ * Represents the main game-window (JFrame) for the Pokemon-battle's graphics
+ * 
+ * This class is responsible for :
+ * - Show the background image and sprites/Pokemon gifs correctly
+ * - Show information about the Pokemon (name,HP, attacks ++)
+ * - Show the message log about what happens in the battle (Attacks, who's turn
+ * it
+ * is, show who wins)
+ * - Load a custom Pokemon-gif used in the GUI
+ * - Recieve updates from Battle.java to show the game mechanics visually
+ * - Recieve keyboard-inputs from KeyListener.java
+ * 
+ * - Uses JLayeredPane to stack the visual elements in the right order
+ * (background lowest followed by Pokemon etc...)
+ * 
+ * All updates on different GUI-components happens in
+ * SwingUtilities.invokeLater(...) in order to secure that none of the different
+ * parts of the code crash 'into' each other, and secures safe GUI updates.
+ * 
+ */
+public class PokemonGUI extends JFrame {
 
     // Img links
+    // I do not own any of the images used. Some images are taken from
+    // https://github.com/Leonardo-Gomiero/PokeDuel, as the images used fit my
+    // project very well, and similiar photos/gifs are not easily available on other
+    // sites. I will not use this project for any commercial projects, only for
+    // learning
+
     private static final String BACKGROUND_IMAGE_URL = "https://storage.ko-fi.com/cdn/useruploads/display/088aab6e-5910-4edd-82c5-9a1bca2b5e13_mdpokemonbattle_notextbox.png";
     private static final String PLAYER_GIF_URL = "https://github.com/Leonardo-Gomiero/PokeDuel/blob/main/src/main/resources/Gifs/backRayquaza.gif?raw=true";
     private static final String OPPONENT_GIF_URL = "https://raw.githubusercontent.com/Leonardo-Gomiero/PokeDuel/refs/heads/main/src/main/resources/Gifs/Giratina.gif";
 
-    // I do not own any of the images used. Some images are taken from
-    // https://github.com/Leonardo-Gomiero/PokeDuel, as the images used fit my
-    // project very well, and similiar photos/gifs are not easily available on other
-    // sites.
-
-    // Window size
+    // Game Window size
     private static final int WINDOW_WIDTH = 800;
     private static final int WINDOW_HEIGHT = 600;
 
@@ -80,9 +102,8 @@ public class PokemonGUI extends JFrame { // Nytt navn
         }
 
         JLayeredPane layeredPane = new JLayeredPane();
-        // setContentPane(layeredPane); // Sett som content pane til slutt
 
-        // background
+        // create and customize background
         backgroundLabel = createBackgroundLabel();
         if (backgroundLabel != null) {
             backgroundLabel.setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -139,7 +160,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
         opponentHpBar.setBounds(OPPONENT_HP_X + 20, OPPONENT_HP_Y + 45, INFO_Width, 20);
         layeredPane.add(opponentHpBar, JLayeredPane.MODAL_LAYER);
 
-        // text area
+        // text/message area
         textArea = new JTextArea(5, 30);
         textArea.setEditable(false);
         textArea.setLineWrap(true);
@@ -190,6 +211,12 @@ public class PokemonGUI extends JFrame { // Nytt navn
         }
     }
 
+    /**
+     * I got some help from AI in this method in order to select and initialize the
+     * background image correctly.
+     * 
+     * @return
+     */
     private JLabel createBackgroundLabel() {
         try {
             URL bgUrl = URI.create(BACKGROUND_IMAGE_URL).toURL();
@@ -205,6 +232,16 @@ public class PokemonGUI extends JFrame { // Nytt navn
         }
     }
 
+    /**
+     * I was struggling with this on my own, so I asked AI for some help in this
+     * method in order to set the Gifs correctly.
+     * 
+     * @param urlString
+     * @param description
+     * @param targetWidth
+     * @param targetHeight
+     * @return
+     */
     private JLabel createGifLabel(String urlString, String description, int targetWidth, int targetHeight) {
         try {
             URL gifUrl = URI.create(urlString).toURL();
@@ -225,6 +262,19 @@ public class PokemonGUI extends JFrame { // Nytt navn
         }
     }
 
+    /**
+     * Responsible for updating the information in the different information boxes
+     * in the game. For example the HP bar, Name label
+     * 
+     * Not responsible for updating textBox
+     * 
+     * @param player1Name
+     * @param p1HP
+     * @param p1MaxHp
+     * @param p2Name
+     * @param p2Hp
+     * @param p2MaxHp
+     */
     public void updateStatus(String player1Name, int p1HP, int p1MaxHp, String p2Name, int p2Hp, int p2MaxHp) {
         SwingUtilities.invokeLater(() -> {
             playerNameLabel.setText(player1Name);
@@ -241,6 +291,9 @@ public class PokemonGUI extends JFrame { // Nytt navn
         });
     }
 
+    // if HP above 50% : green colour
+    // if hp between 20% and 50% : yellow colour
+    // if hp below 20% : red colour
     private void updateHpBarColor(JProgressBar hpBar) {
         double percentage = (double) hpBar.getValue() / hpBar.getMaximum();
         if (percentage > 0.5)
@@ -251,6 +304,13 @@ public class PokemonGUI extends JFrame { // Nytt navn
             hpBar.setForeground(Color.RED);
     }
 
+    /**
+     * Adds a message into the text-box in the upper right of the game-screen.
+     * This method is called when something happens in the game. For example when a
+     * Pokemon attacks, it will be displayed in the text box.
+     * 
+     * @param message
+     */
     public void addMessage(String message) {
         SwingUtilities.invokeLater(() -> {
             textArea.append(message + "\n");
@@ -258,6 +318,10 @@ public class PokemonGUI extends JFrame { // Nytt navn
         });
     }
 
+    /**
+     * 
+     * @param winnerMessage
+     */
     public void showWinner(String winnerMessage) {
         SwingUtilities.invokeLater(() -> {
             addMessage("\n ======= BATTLE STARTED =======");
@@ -266,6 +330,14 @@ public class PokemonGUI extends JFrame { // Nytt navn
         });
     }
 
+    /**
+     * Iterates through the list with available attacks and 'prints' the valid
+     * attacks in the text box, along with what button to press in order to
+     * perform the attack.
+     * 
+     * @param playerName
+     * @param moves
+     */
     public void displayPlayerOptions(String playerName, List<Attack> moves) {
         SwingUtilities.invokeLater(() -> {
             addMessage("\n Your turn, " + playerName);
@@ -280,7 +352,7 @@ public class PokemonGUI extends JFrame { // Nytt navn
         });
     }
 
-    // main-method for testing purposes only
+    // IGNORE -- main-method for testing purposes only
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new PokemonGUI();

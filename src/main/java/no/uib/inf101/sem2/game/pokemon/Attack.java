@@ -5,6 +5,15 @@ public class Attack {
     int power;
     PokemonTypes type;
 
+    /**
+     * Recieves parameters name,power,type.
+     * This defines what kind of attack a pokemon should have and what attributes
+     * the attack has.
+     * 
+     * @param name
+     * @param power
+     * @param type
+     */
     public Attack(String name, int power, PokemonTypes type) {
         this.name = name;
         this.power = power;
@@ -12,7 +21,7 @@ public class Attack {
     }
 
     /**
-     * Returns the name used in the constructor
+     * Returns the attack name recieved in the constructor
      * 
      * @return
      */
@@ -21,9 +30,9 @@ public class Attack {
     }
 
     /**
-     * Returns the Power of the Pokemon
+     * Returns the attacking power of the Pokemon
      * 
-     * @return
+     * @return power (int)
      */
     public int getPower() {
         return this.power;
@@ -33,7 +42,7 @@ public class Attack {
      * Returns the type of the attack. Is later used to calculate the efficiency of
      * the attack against its opponent.
      * 
-     * @return
+     * @return PokemonTypes attack type
      */
     public PokemonTypes getAttackType() {
         return this.type;
