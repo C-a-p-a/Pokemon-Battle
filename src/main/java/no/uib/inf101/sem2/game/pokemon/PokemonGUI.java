@@ -324,7 +324,7 @@ public class PokemonGUI extends JFrame {
      */
     public void showWinner(String winnerMessage) {
         SwingUtilities.invokeLater(() -> {
-            addMessage("\n ======= BATTLE STARTED =======");
+            addMessage("\n ======= BATTLE OVER =======");
             addMessage(winnerMessage);
             JOptionPane.showMessageDialog(this, winnerMessage, "THE BATTLE IS OVER!", JOptionPane.INFORMATION_MESSAGE);
         });

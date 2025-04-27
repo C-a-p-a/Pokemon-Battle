@@ -27,7 +27,7 @@ public class Main {
 
             // initialize Rayquaza's attacks and the Pokemon itself
             List<Attack> rayquazaMoves = List.of(Incinerate, Tackle, BugBuzz, RockSlide);
-            Pokemon Rayquaza = new Pokemon("Rayquaza", PokemonTypes.ELECTRIC, 175, 35, 40, 5, rayquazaMoves);
+            Pokemon Rayquaza = new Pokemon("Rayquaza", PokemonTypes.ELECTRIC, 160, 35, 40, 5, rayquazaMoves);
 
             // Initialize Giratina's attacks and the Pokemon itself
             List<Attack> giratinaMoves = List.of(SeedBomb, Bubble, RockSlide, Tackle);

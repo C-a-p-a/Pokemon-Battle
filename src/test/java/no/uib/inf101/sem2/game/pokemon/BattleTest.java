@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.util.List;
 import java.util.Collections;
@@ -39,16 +40,9 @@ public class BattleTest {
         playerFighter = new UserFighter(playerPokemon, "Trainer");
         opponentFighterAI = new OpponentAI(opponentPokemon, "AI");
 
-        battle = new Battle(playerFighter, opponentFighterAI, gui);
+        battle = new Battle(playerFighter, opponentFighterAI, null);
 
     }
-
-    // @Test
-    // void lowCooldownStarts() {
-    // // check that the pokemon with lowest cooldown starts the battle
-    // assertEquals(playerFighter, battle.getCurrentPlayer());
-
-    // }
 
     /**
      * Tests if the current player and the other player is the same.
@@ -91,4 +85,104 @@ public class BattleTest {
         assertTrue(opponentPokemon.hasFainted());
         assertEquals(0, opponentPokemon.getHP());
     }
+
+    @Test
+    void battleInitializationTest() {
+        // Tests that the battle initializes correctly with the player and opponent
+        assertEquals(playerFighter, battle.getCurrentPlayer());
+        assertEquals(opponentFighterAI, battle.getOtherPlayer());
+        assertFalse(battle.battleOver);
+    }
+
+    @Test
+    void battleWithLowerCooldownTest() {
+        // Test that the player with the lower cooldown starts
+        playerPokemon = new Pokemon("Charmander", PokemonTypes.FIRE, 100, 10, 10, 1, List.of(playerAttack));
+        opponentPokemon = new Pokemon("Squirtle", PokemonTypes.WATER, 100, 10, 10, 2, List.of(opponentAttack));
+
+        playerFighter = new UserFighter(playerPokemon, "Trainer");
+        opponentFighterAI = new OpponentAI(opponentPokemon, "AI");
+
+        battle = new Battle(playerFighter, opponentFighterAI, gui);
+
+        assertEquals(playerFighter, battle.getCurrentPlayer());
+        assertEquals(opponentFighterAI, battle.getOtherPlayer());
+    }
+
+    @Test
+    void battleWithEqualCooldownTest() {
+        // Test that the player starts when cooldowns are equal
+        playerPokemon = new Pokemon("Eevee", PokemonTypes.NORMAL, 100, 10, 10, 2, List.of(playerAttack));
+        opponentPokemon = new Pokemon("Meowth", PokemonTypes.NORMAL, 100, 10, 10, 2, List.of(opponentAttack));
+
+        playerFighter = new UserFighter(playerPokemon, "Trainer");
+        opponentFighterAI = new OpponentAI(opponentPokemon, "AI");
+
+        battle = new Battle(playerFighter, opponentFighterAI, gui);
+
+        assertEquals(playerFighter, battle.getCurrentPlayer());
+        assertEquals(opponentFighterAI, battle.getOtherPlayer());
+    }
+
+    @Test
+    void battleWithHigherCooldownTest() {
+        // Test that the opponent starts when their cooldown is lower
+        playerPokemon = new Pokemon("Pidgey", PokemonTypes.WATER, 100, 10, 10, 3, List.of(playerAttack));
+        opponentPokemon = new Pokemon("Rattata", PokemonTypes.NORMAL, 100, 10, 10, 1, List.of(opponentAttack));
+
+        playerFighter = new UserFighter(playerPokemon, "Trainer");
+        opponentFighterAI = new OpponentAI(opponentPokemon, "AI");
+
+        battle = new Battle(playerFighter, opponentFighterAI, gui);
+
+        assertEquals(opponentFighterAI, battle.getCurrentPlayer());
+        assertEquals(playerFighter, battle.getOtherPlayer());
+    }
+
+    @Test
+    void checkWinConditionPlayerFaints() {
+        // Simulate player fainting
+        playerPokemon.takeDamage(playerPokemon.getHP());
+        assertTrue(playerPokemon.hasFainted());
+
+        battle.checkWinCondition();
+
+        assertTrue(battle.battleOver);
+    }
+
+    @Test
+    void checkWinConditionOpponentFaints() {
+        // Simulate opponent fainting
+        opponentPokemon.takeDamage(opponentPokemon.getHP());
+        assertTrue(opponentPokemon.hasFainted());
+
+        battle.checkWinCondition();
+
+        assertTrue(battle.battleOver);
+    }
+
+    @Test
+    void checkWinConditionNoFaint() {
+        // Make sure no one has fainted
+        assertFalse(playerPokemon.hasFainted());
+        assertFalse(opponentPokemon.hasFainted());
+
+        battle.checkWinCondition();
+
+        assertFalse(battle.battleOver);
+    }
+
+    @Test
+    void currentTurnPlayerTurnTest() {
+        // Make sure its the player's turn initially
+        assertTrue(battle.currentTurn());
+    }
+
+    @Test
+    void currentTurnOpponentTurnTest() {
+        // Switch turn to opponent and make sure it's no longer the player's turn
+        battle.switchTurn();
+        assertFalse(battle.currentTurn());
+    }
+
 }

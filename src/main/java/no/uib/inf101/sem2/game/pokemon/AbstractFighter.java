@@ -5,6 +5,12 @@ public abstract class AbstractFighter implements IFighter {
     protected String name;
     public Pokemon activePokemon;
 
+    /**
+     * Creates an AbstractFighter with a Pokemon and name for the fighter.
+     *
+     * @param pokemon  The Pokemon connected with this fighter.
+     * @param pokeName The name of the fighter.
+     */
     public AbstractFighter(Pokemon pokemon, String pokeName) {
         this.activePokemon = pokemon;
         this.name = pokeName;

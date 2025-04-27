@@ -38,16 +38,16 @@ public class PokemonTest {
     @Test
     void takeDamageAndFaint() {
 
-        // check that pokemon takes damage
+        // Check that pokemon takes damage
         int originalHp = pikachu.getHP();
         pikachu.takeDamage(30);
         assertEquals(originalHp - 30, pikachu.getHP());
 
-        // check if pokemon faints if hp=0
+        // Check if pokemon faints if hp=0
         pikachu.takeDamage(70);
         assertTrue(pikachu.hasFainted());
 
-        // check for negative hp
+        // Check for negative hp
         pikachu.takeDamage(10);
         assertEquals(pikachu.getHP(), 0);
 
@@ -56,4 +56,23 @@ public class PokemonTest {
 
     }
 
+    @Test
+    void getAttackStatTest() {
+        // Verify that the attack stat is correctly set by the constructor
+        assertEquals(10, pikachu.getAttackStat(), "Attack stat should be 10");
+
+        // Check that the attack stat is not null or invalid
+        assertNotEquals(0, pikachu.getAttackStat(), "Attack stat should not be 0");
+        assertTrue(pikachu.getAttackStat() > 0, "Attack stat should be greater than 0");
+    }
+
+    @Test
+    void getDefenseStatTest() {
+        // Verify that the defense stat is correct
+        assertEquals(10, pikachu.defenseStat(), "Defense stat should be 10");
+
+        // Make sure the defense stat is not null or invalid
+        assertNotEquals(0, pikachu.defenseStat(), "Defense stat should not be 0");
+        assertTrue(pikachu.defenseStat() > 0, "Defense stat should be greater than 0");
+    }
 }

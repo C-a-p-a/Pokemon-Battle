@@ -40,20 +40,16 @@ public class Battle {
         int p1Cooldown = player1.getCooldown();
         int p2Cooldown = player2.getCooldown();
 
-        if (p1Cooldown >= p2Cooldown) {
+        if (p1Cooldown <= p2Cooldown) {
             this.currentPlayer = this.playerFighter;
-            this.otherPlayer = opponentFighter;
-        } else
+            this.otherPlayer = this.opponentFighter;
+
+        } else { // p2Cooldown < p1Cooldown
             this.currentPlayer = this.opponentFighter;
-        this.otherPlayer = this.playerFighter;
-
-        if (currentPlayer == playerFighter) {
-            this.otherPlayer = opponentFighter;
-        } else
-            this.otherPlayer = playerFighter;
-
+            this.otherPlayer = this.playerFighter;
+        }
         this.battleOver = false;
-
+        this.actionInProgress = false;
     }
 
     /**
