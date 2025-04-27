@@ -11,7 +11,7 @@ public class Battle {
     private IFighter opponentFighter;
     private IFighter currentPlayer;
     private IFighter otherPlayer;
-    private boolean battleOver = false;
+    boolean battleOver = false;
     private Pokemon player1;
     private Pokemon player2;
     private Random aiRandom = new Random();

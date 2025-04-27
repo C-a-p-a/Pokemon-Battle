@@ -9,6 +9,7 @@ public enum PokemonTypes {
      * This double is then multiplied with the original attack damage.
      * 
      * Super efficient attack = 2.0 * originaldamage.
+     * 
      *
      * @param other Defenders PokemonType
      * @return Efficiency (double)

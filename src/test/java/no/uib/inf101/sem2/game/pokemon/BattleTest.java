@@ -1,8 +1,11 @@
 package no.uib.inf101.sem2.game.pokemon;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import java.util.Collections;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -10,33 +13,51 @@ import org.junit.jupiter.api.Test;
 
 public class BattleTest {
 
-    private IFighter player1;
-    private IFighter player2;
-    private Pokemon Testomon;
-    private Pokemon otherTestomon;
+    private Pokemon playerPokemon;
+    private Pokemon opponentPokemon;
+    private Pokemon thirdPokemon;
+    private UserFighter playerFighter;
+    private OpponentAI opponentFighterAI;
+    private OpponentAI thirdFighter;
+    private Attack playerAttack;
+    private Attack opponentAttack;
+    private PokemonGUI gui;
     private Battle battle;
+    private Battle battle2;
 
     @BeforeEach
     void setUp() {
+        playerAttack = new Attack("Punch", 40, PokemonTypes.NORMAL);
+        opponentAttack = new Attack("Bite", 30, PokemonTypes.NORMAL);
 
-        Testomon = new Pokemon("Testomon", PokemonTypes.NORMAL, 150, 50, 50, 5, Collections.emptyList());
-        otherTestomon = new Pokemon("otherTestomon", PokemonTypes.NORMAL, 150, 50, 50, 10, Collections.emptyList());
+        playerPokemon = new Pokemon("Pikachu", PokemonTypes.ELECTRIC, 100, 10, 10, 1, List.of(playerAttack));
+        opponentPokemon = new Pokemon("Bulbasaur", PokemonTypes.GRASS, 100, 10, 10, 2, List.of(opponentAttack));
 
-        player1 = new OpponentAI(Testomon, "Test1");
-        player2 = new OpponentAI(otherTestomon, "Test2");
+        playerPokemon.restoreHP();
+        opponentPokemon.restoreHP();
 
-        IFighter original = player1;
-        IFighter other = player2;
+        playerFighter = new UserFighter(playerPokemon, "Trainer");
+        opponentFighterAI = new OpponentAI(opponentPokemon, "AI");
 
-        battle = new Battle(player1, player2);
+        battle = new Battle(playerFighter, opponentFighterAI, gui);
 
     }
+
+    // @Test
+    // void lowCooldownStarts() {
+    // // check that the pokemon with lowest cooldown starts the battle
+    // assertEquals(playerFighter, battle.getCurrentPlayer());
+
+    // }
 
     /**
      * Tests if the current player and the other player is the same.
      */
     @Test
     void currentAndOtherPlayer() {
+        assertNotEquals(battle.getCurrentPlayer(), battle.getOtherPlayer());
+
+        battle.switchTurn();
 
         assertNotEquals(battle.getCurrentPlayer(), battle.getOtherPlayer());
 
@@ -50,10 +71,24 @@ public class BattleTest {
 
         Attack testAttack = new Attack("Power punch", 45, PokemonTypes.WATER);
 
-        int expectedDamage = 45;
+        int expectedDamage = 40;
 
-        int actualDamage = battle.calculateDamage(testAttack, otherTestomon, Testomon);
+        int actualDamage = battle.calculateDamage(playerAttack, playerPokemon, opponentPokemon);
 
         assertEquals(expectedDamage, actualDamage);
+    }
+
+    @Test
+    void faintAfterAttacked() {
+        Attack powerful = new Attack("Ultra attack", 250, PokemonTypes.NORMAL);
+
+        int opponentHP = opponentPokemon.getHP();
+        // check that the attack should be enough to faint the opponent
+        assertTrue(powerful.getPower() > opponentPokemon.getHP());
+
+        opponentPokemon.takeDamage(powerful.getPower());
+
+        assertTrue(opponentPokemon.hasFainted());
+        assertEquals(0, opponentPokemon.getHP());
     }
 }
