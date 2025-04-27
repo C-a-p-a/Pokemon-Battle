@@ -18,3 +18,9 @@ Når man kjører spillet, er det viktig at man er koblet til internett for at GU
 # Bruk av ressurser fra internett
 
 Jeg har brukt to GIFs og et bakgrunnsbilde fra internett. Jeg eier ingen av disse, og bruker de kun i dette prosjektet, som kun er til for læring. Jeg skal ikke bruke dette prosjektet til noe kommersielt. Det står litt mer om dette i PokemonGUI.java. Håper det er ok
+
+# Video
+
+Link til Youtube video om prosjektet:
+
+https://youtu.be/nOXgQaRhUc8
