@@ -142,7 +142,7 @@ You can easily customize the Pokemon and their attributes by modifying [Main.jav
 
 ## Acknowledgments
 
-- Inspired by Lab 2 from INF101, Spring 2025 at the University of Bergen
+- Inspired by Lab 2 from the course Introduction to Object Oriented Programming, Spring 2025 at the University of Bergen
 - Created as a learning project to practice Object-Oriented Programming principles
 - Pokemon and related characters are property of Nintendo/Game Freak/The Pokemon Company
 
