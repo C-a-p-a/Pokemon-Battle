@@ -27,7 +27,7 @@ This application simulates a turn-based Pokemon battle between a human player an
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd jacob.saugestad_PokemonBattle
+cd Pokemon-Battle
 ```
 
 2. Build the project using Maven:
